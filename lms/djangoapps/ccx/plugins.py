@@ -11,6 +11,8 @@ from courseware.access import has_access
 from student.roles import CourseCcxCoachRole
 from xmodule.tabs import CourseTab
 
+from .permissions import VIEW_CCX_COACH_DASHBOARD
+
 
 class CcxCourseTab(CourseTab):
     """
@@ -31,7 +33,7 @@ class CcxCourseTab(CourseTab):
             # If ccx is not enable do not show ccx coach tab.
             return False
 
-        is_staff_or_instructor = has_access(user, 'staff', course) or has_access(user, 'instructor', course)
+        is_staff_or_instructor = user.has_perm(VIEW_CCX_COACH_DASHBOARD, course.id)
         if hasattr(course.id, 'ccx') and is_staff_or_instructor:
             # if user is staff or instructor then he can always see ccx coach tab.
             return True
