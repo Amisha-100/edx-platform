@@ -27,6 +27,7 @@ from edxmako.shortcuts import render_to_response, render_to_string
 
 from lms.djangoapps.courseware.courses import allow_public_access
 from lms.djangoapps.courseware.exceptions import CourseAccessRedirect
+from lms.djangoapps.courseware.permissions import ACCESS_COURSE, CAN_MASQUERADE_AS_STUDENT
 from lms.djangoapps.experiments.utils import get_experiment_user_metadata_context
 from lms.djangoapps.gating.api import get_entrance_exam_score_ratio, get_entrance_exam_usage_key
 from lms.djangoapps.grades.api import CourseGradeFactory
@@ -147,7 +148,7 @@ class CoursewareIndex(View):
                         # If the user is considered enrolled show the default XBlock student_view.
                         pass
 
-                self.is_staff = has_access(request.user, 'staff', self.course)
+                self.is_staff = user.has_perm(ACCESS_COURSE, course.id) and user.has_perm(CAN_MASQUERADE_AS_STUDENT, course.id)
                 self._setup_masquerade_for_effective_user()
 
                 return self.render(request)

@@ -35,6 +35,7 @@ from courseware.date_summary import (
 from courseware.masquerade import check_content_start_date_for_masquerade_user
 from courseware.model_data import FieldDataCache
 from courseware.module_render import get_module
+from courseware.permissions import ACCESS_COURSE
 from edxmako.shortcuts import render_to_string
 from lms.djangoapps.certificates import api as certs_api
 from lms.djangoapps.courseware.courseware_access_exception import CoursewareAccessException
@@ -139,7 +140,7 @@ def check_course_access(course, user, action, check_if_enrolled=False, check_sur
     check_survey_complete: If true, additionally verifies that the user has completed the survey.
     """
     # Allow staff full access to the course even if not enrolled
-    if has_access(user, 'staff', course.id):
+    if user.has_perm(ACCESS_COURSE, course.id):
         return
 
     request = get_current_request()
